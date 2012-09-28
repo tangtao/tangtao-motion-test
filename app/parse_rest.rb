@@ -10,7 +10,7 @@ class ParseREST
     options = {:headers => HEADER,:payload => content}
     url = REST_URL
     BW::HTTP.post(url, options) do |response|
-      block.call(response.body.to_str)
+      block.call(response.status_code)
     end
 
   end
@@ -19,8 +19,12 @@ class ParseREST
     options = {:headers => HEADER}
     url = REST_URL
     BW::HTTP.get(url, options) do |response|
-      result = BW::JSON.parse(response.body.to_str)
-      block.call(result["results"])
+      if response.status_code.to_i == 200
+        result = BW::JSON.parse(response.body.to_str)["results"]
+      else
+        result = []
+      end
+      block.call(response.status_code, result)
     end
 
   end

@@ -13,9 +13,16 @@ class Tap2Controller < UIViewController
     @button.when(UIControlEventTouchUpInside) do
       @button.enabled = false
 
-      ParseREST.list do |items|
-        @data = items
-        @table.reloadData
+      ParseREST.list do |status, items|
+        if status.to_i == 200
+          @data = items
+          @table.reloadData
+        else
+          alert = UIAlertView.new
+          alert.message = "Get list Fail."
+          alert.addButtonWithTitle("OK")
+          alert.show
+        end
         @button.enabled = true
       end
     end

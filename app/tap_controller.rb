@@ -16,8 +16,15 @@ class TapController < UIViewController
         @button.enabled = false
         info = {'name' => @name_field.text, 'phone' => @phone_field.text}
         ParseREST.save(info) do |status|
-          @name_field.text = ""
-          @phone_field.text = ""
+          if status.to_i == 201
+            @name_field.text = ""
+            @phone_field.text = ""
+          else
+            alert = UIAlertView.new
+            alert.message = "Create Fail."
+            alert.addButtonWithTitle("OK")
+            alert.show
+          end
           @button.enabled = true
         end
       else
