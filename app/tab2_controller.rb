@@ -15,7 +15,7 @@ class Tap2Controller < UIViewController
 
       ParseREST.list do |status, items|
         if status.to_i == 200
-          @data = items
+          @data = items.sort{|x,y| y['createdAt'] <=> x['createdAt'] }
           @table.reloadData
         else
           alert = UIAlertView.new
